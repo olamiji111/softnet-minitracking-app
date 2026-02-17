@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+    .flex-center {
+        @apply flex items-center justify-center;
+    }
+
+    .flex-between {
+        @apply flex items-center justify-between;
+    }
+
+    .flex-start {
+        @apply flex items-center justify-start;
+    }
+}
+
+@layer components {
+    .cart-btn {
+        @apply flex items-center justify-center size-10 rounded-full bg-dark-100;
+    }
+
+}
