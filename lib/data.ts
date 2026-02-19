@@ -19,7 +19,7 @@ export const transactions: Transaction[] = [
     },
     {
         id: "3",
-        amount: -60.25,
+        amount: +60.25,
         merchant: "Starbucks",
         category: "Dining",
         date: "2024-02-08",
@@ -67,7 +67,7 @@ export const transactions: Transaction[] = [
     },
     {
         id: "9",
-        amount: -120.0,
+        amount: +120.0,
         merchant: "AMC Theaters",
         category: "Entertainment",
         date: "2024-02-02",
@@ -107,10 +107,10 @@ export const transactions: Transaction[] = [
     },
     {
         id: "14",
-        amount: -55.0,
+        amount: +55.0,
         merchant: "Whole Foods",
         category: "Groceries",
-        date: "2024-01-28",
+        date: "2025-01-28",
         status: "completed",
     },
     {
@@ -134,7 +134,7 @@ export const transactions: Transaction[] = [
         amount: -180.0,
         merchant: "CVS",
         category: "Healthcare",
-        date: "2024-01-25",
+        date: "2024-06-25",
         status: "completed",
     },
     {
@@ -142,15 +142,15 @@ export const transactions: Transaction[] = [
         amount: -200.0,
         merchant: "Amazon",
         category: "Shopping",
-        date: "2024-01-24",
+        date: "2024-09-24",
         status: "to be paid",
     },
     {
         id: "19",
-        amount: -100.0,
+        amount: +100.0,
         merchant: "Shell Gas Station",
         category: "Transportation",
-        date: "2024-01-23",
+        date: "2025-09-23",
         status: "completed",
     },
     {
@@ -158,7 +158,7 @@ export const transactions: Transaction[] = [
         amount: -30.0,
         merchant: "Trader Joe's",
         category: "Groceries",
-        date: "2024-01-22",
+        date: "2025-04-22",
         status: "reversed",
     },
     {
@@ -166,7 +166,7 @@ export const transactions: Transaction[] = [
         amount: -25.0,
         merchant: "Burger King",
         category: "Dining",
-        date: "2024-01-21",
+        date: "2025-08-21",
         status: "completed",
     },
     {
@@ -203,10 +203,10 @@ export const transactions: Transaction[] = [
     },
     {
         id: "26",
-        amount: -120.0,
+        amount: +120.0,
         merchant: "Con Edison",
         category: "Utilities",
-        date: "2024-01-16",
+        date: "2025-05-16",
         status: "completed",
     },
     {
@@ -214,7 +214,7 @@ export const transactions: Transaction[] = [
         amount: -65.0,
         merchant: "Domino's Pizza",
         category: "Dining",
-        date: "2024-01-15",
+        date: "2025-11-15",
         status: "pending",
     },
     {
@@ -230,12 +230,12 @@ export const transactions: Transaction[] = [
         amount: -80.0,
         merchant: "PG&E",
         category: "Utilities",
-        date: "2024-01-13",
+        date: "2025-08-13",
         status: "failed",
     },
     {
         id: "30",
-        amount: -45.0,
+        amount: +45.0,
         merchant: "Whole Foods",
         category: "Groceries",
         date: "2024-01-12",
