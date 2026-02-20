@@ -1,3 +1,4 @@
+import { useTransactionStore } from "@/store";
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { LayoutChangeEvent, Pressable, Text, TouchableOpacity, View } from "react-native";
@@ -125,8 +126,15 @@ const Header = () => {
                 : ["All Status", "Completed", "Pending", "Failed", "Reversed", "To be Paid"];
 
         const setActiveOption = (opt: string) => {
-            if (openFilter === "category") setActiveCategory(opt);
-            if (openFilter === "status") setActiveStatus(opt);
+            if (openFilter === "category") {
+                setActiveCategory(opt);       // local UI state for button
+                useTransactionStore.getState().setCategory(opt); // update store filter
+            }
+            if (openFilter === "status") {
+                setActiveStatus(opt);
+                useTransactionStore.getState().setStatus(opt);   // update store filter
+            }
+
             setOpenFilter(null);
             panelHeight.value = withTiming(0, { duration: 90 });
         };
@@ -136,7 +144,7 @@ const Header = () => {
                 {/* Shadow overlay */}
                 <Pressable
                     onPress={() => toggleFilter(openFilter)}
-                    className="absolute inset-0 bg-black/70 z-50"
+                    className="absolute inset-0 bg-black/80 z-50"
                     style={{ top: headerBottom.value }}
                 />
 
