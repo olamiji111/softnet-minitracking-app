@@ -39,8 +39,8 @@ const TransactionItem = ({ item }: { item: typeof transactions[0] }) => {
             <View className='flex-col items-end gap-1'>
                 <Text className={` text-sm font-inter-semibold ${item.amount >= 0 ? "text-green-500" : "text-black"}`}>
                     {item.amount >= 0
-                        ? `₦${item.amount.toFixed(2)}`
-                        : `₦${Math.abs(item.amount).toFixed(2)}`
+                        ? `+₦${item.amount.toFixed(2)}`
+                        : `- ₦${Math.abs(item.amount).toFixed(2)}`
                     }
                 </Text>
                 <Text className={` text-xs font-inter-light px-2 py-1 rounded ${statusStyle.bg} ${statusStyle.text}`}>
@@ -93,13 +93,20 @@ const Transactionblock = () => {
         if (loading) return;
 
         setLoading(true);
+
         setTimeout(() => {
             const filtered = store.getFiltered();
             const nextBatch = store.getNextBatch();
 
-            if (nextBatch.length) setList(prev => [...prev, ...nextBatch]);
+            if (nextBatch.length) {
+                setList(prev => {
+                    // prevent duplicates by id
+                    const existingIds = new Set(prev.map(i => i.id));
+                    const uniqueNext = nextBatch.filter(i => !existingIds.has(i.id));
+                    return [...prev, ...uniqueNext];
+                });
+            }
 
-            // Show noMore only if we actually reached end
             if (store.loadedCount >= filtered.length) setNoMore(true);
 
             setLoading(false);
@@ -126,10 +133,10 @@ const Transactionblock = () => {
     const filtered = store.getFiltered();
 
     return (
-        <View className="mt-8 flex-1">
+        <View className="mt-8 ">
             {/* Scrollable container */}
             <View className="py-4 shadow-xs bg-white-400 rounded-2xl overflow-hidden" style={{ maxHeight: 600 }}>
-                {/* HEADER */}
+
                 <View className="px-2">
                     <View className="flex-row flex-between">
                         <View className="flex flex-col items-start gap-1.5">
@@ -172,7 +179,7 @@ const Transactionblock = () => {
                 )}
             </View>
 
-            {/* FOOTER */}
+
             <View className="h-10 items-center justify-center mt-2">
                 {loading && (
                     <View className="flex-row items-center gap-2">
@@ -183,7 +190,7 @@ const Transactionblock = () => {
                     </View>
                 )}
 
-                {!loading && showNoMore && (
+                {!loading && showNoMore && isAtBottom && (
                     <Text className="text-xs text-gray-400">
                         No more transactions
                     </Text>
@@ -193,4 +200,5 @@ const Transactionblock = () => {
     );
 }
 export default Transactionblock;
+
 
