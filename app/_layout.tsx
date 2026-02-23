@@ -46,6 +46,10 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="transactionDetail/[id]"
+          options={{ headerShown: false }}
+        />
       </Stack>
     </GestureHandlerRootView>
 

@@ -3,11 +3,14 @@ import { transactions } from '@/lib/data';
 import { useTransactionStore } from '@/store';
 import { formatDate } from '@/utils';
 import { MaterialIcons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
+
 // ------ Transaction Item ----------
 const TransactionItem = ({ item }: { item: typeof transactions[0] }) => {
+    const router = useRouter();
     const statusStyles: Record<string, { bg: string; text: string }> = {
         completed: { bg: "bg-green-100", text: "text-green-600" },
         pending: { bg: "bg-yellow-200", text: "text-yellow-600" },
@@ -21,7 +24,7 @@ const TransactionItem = ({ item }: { item: typeof transactions[0] }) => {
         <TouchableOpacity
             activeOpacity={0.7}
             className='flex-row justify-between items-center py-2.5 px-2 border-transparent'
-            onPress={() => console.log("Transaction details triggered", item.id)}
+            onPress={() => router.push(`/transactionDetail/${item.id}`)}
         >
             <View className='flex-row items-center gap-1.5'>
                 <View className='px-4 py-4 rounded-full bg-green-100'>

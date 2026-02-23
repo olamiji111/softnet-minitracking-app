@@ -8,13 +8,15 @@ import {
   Animated,
   PanResponder,
   Text,
+  TouchableOpacity,
   View
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const PULL_THRESHOLD = 70;
 
 const Home = () => {
+  const insets = useSafeAreaInsets();
   const store = useTransactionStore();
 
   const [pullDistance, setPullDistance] = useState(0);
@@ -29,10 +31,10 @@ const Home = () => {
 
   const panResponder = useRef(
     PanResponder.create({
-      onMoveShouldSetPanResponder: (_, g) => g.dy > 100, // dead zone
+      onMoveShouldSetPanResponder: (_, g) => g.dy > 100,
       onPanResponderMove: (_, g) => {
         if (g.dy > 0) {
-          translateY.setValue(g.dy * 0.3); // gentle pull
+          translateY.setValue(g.dy * 0.3);
           setPullDistance(g.dy);
         }
       },
@@ -91,9 +93,29 @@ const Home = () => {
           </View>
         )}
         <Transactionblock />
-
       </Animated.View>
-
+      <TouchableOpacity
+        activeOpacity={0.8}
+        onPress={() => { }}
+        style={{
+          position: 'absolute',
+          right: 10,
+          bottom: insets.bottom + 20,
+          width: 56,
+          height: 56,
+          borderRadius: 28,
+          backgroundColor: '#22c55e',
+          alignItems: 'center',
+          justifyContent: 'center',
+          elevation: 6, // Android shadow
+          shadowColor: '#000', // iOS shadow
+          shadowOpacity: 0.2,
+          shadowRadius: 6,
+          shadowOffset: { width: 0, height: 3 },
+        }}
+      >
+        <MaterialIcons name="add" size={28} color="#fff" />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };

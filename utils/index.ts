@@ -1,6 +1,30 @@
 // utils/groupTransactions.ts
 import { Transaction } from "@/types/type";
 
+
+
+export const generateTransactionNumber = (id: string | number) => {
+    const seed = String(id) + Date.now().toString();
+
+    const digits: number[] = [];
+
+    for (let i = 0; digits.length < 22; i++) {
+        // pseudo-random from seed + index
+        const rand =
+            (Number(seed[i % seed.length]) + Math.floor(Math.random() * 10)) % 10;
+
+        const prev1 = digits[digits.length - 1];
+        const prev2 = digits[digits.length - 2];
+
+        // prevent triple repetition
+        if (prev1 === rand && prev2 === rand) continue;
+
+        digits.push(rand);
+    }
+
+    return digits.join("");
+};
+
 interface GroupedItem {
     title: string;
     data: Transaction[];
@@ -14,10 +38,7 @@ type AccType = {
     };
 };
 
-/**
- * Group transactions by Year → Month → Day
- * Returns array of { title: "Day Month", data: Transaction[] }
- */
+
 export const groupTransactionsByDate = (transactions: Transaction[]): GroupedItem[] => {
     const grouped = Object.values(
         transactions.reduce<AccType>((acc, tx) => {
