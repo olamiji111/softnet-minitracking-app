@@ -127,12 +127,12 @@ const Header = () => {
 
         const setActiveOption = (opt: string) => {
             if (openFilter === "category") {
-                setActiveCategory(opt);       // local UI state for button
-                useTransactionStore.getState().setCategory(opt); // update store filter
+                setActiveCategory(opt);
+                useTransactionStore.getState().setCategory(opt);
             }
             if (openFilter === "status") {
                 setActiveStatus(opt);
-                useTransactionStore.getState().setStatus(opt);   // update store filter
+                useTransactionStore.getState().setStatus(opt);
             }
 
             setOpenFilter(null);

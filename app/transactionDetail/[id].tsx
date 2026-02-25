@@ -33,6 +33,7 @@ const Header = () => {
             <TouchableOpacity
                 activeOpacity={0.7}
                 onPress={() => router.back()}
+                className="px-2"
 
             >
                 <MaterialIcons
@@ -100,10 +101,10 @@ const TransactionDetail = () => {
             <Header />
             <View className="px-5 mt-8 py-2 flex-1">
                 <View className='flex-col gap-y-4  border  border-transparent shadow-xs bg-white   rounded-2xl items-center justify-center' style={{ height: 170 }}>
-                    <View className='absolute -top-6 translate-x-1/2'>
+                    <View className='absolute -top-6 '>
                         <Image
-                            source={images.SoftnetLogo}
-                            className='size-12 object-contain'
+                            source={images.Softnet}
+                            className='size-14 object-contain rounded-full'
                             resizeMode='contain'
                         />
                     </View>
