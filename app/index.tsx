@@ -191,14 +191,14 @@ const Home = () => {
                 position: 'absolute',
                 right: 10,
                 bottom: insets.bottom + 20,
-                width: 56,
-                height: 56,
+                width: 60,
+                height: 60,
                 borderRadius: 28,
                 backgroundColor: '#22c55e',
                 alignItems: 'center',
                 justifyContent: 'center',
-                elevation: 6, // Android shadow
-                shadowColor: '#000', // iOS shadow
+                elevation: 6,
+                shadowColor: '#000',
                 shadowOpacity: 0.2,
                 shadowRadius: 6,
                 shadowOffset: { width: 0, height: 3 },

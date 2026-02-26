@@ -1,8 +1,9 @@
 // stores/useTransactionStore.ts
 import { transactions as initialData } from "@/lib/data";
+import { CATEGORY_VALUES, STATUS_VALUES, Transaction } from "@/types/type";
 import { create } from "zustand";
 
-type Transaction = typeof initialData[0];
+const STATUSES = ["Completed", "Pending", "Failed", "Reversed", "To be Paid"] as const;
 
 interface TransactionState {
     allTransactions: Transaction[];
@@ -18,6 +19,12 @@ interface TransactionState {
     getFiltered: () => Transaction[];
     getNextBatch: () => Transaction[];
     hasMore: () => boolean;
+
+    addTransaction: (tx: {
+        merchant: string;
+        amount: number;
+        category: (typeof CATEGORY_VALUES)[number];
+    }) => boolean;
 }
 
 export const useTransactionStore = create<TransactionState>((set, get) => ({
@@ -54,10 +61,7 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
         const { loadedCount, batchSize } = get();
         const filtered = get().getFiltered();
 
-        const next = filtered.slice(
-            loadedCount,
-            loadedCount + batchSize
-        );
+        const next = filtered.slice(loadedCount, loadedCount + batchSize);
 
         set({ loadedCount: loadedCount + next.length });
 
@@ -70,4 +74,49 @@ export const useTransactionStore = create<TransactionState>((set, get) => ({
 
         return loadedCount < filtered.length;
     },
+
+    addTransaction: ({
+        merchant,
+        amount,
+        category,
+    }: {
+        merchant: string;
+        amount: number;
+        category: (typeof CATEGORY_VALUES)[number];
+    }) => {
+        try {
+            const { allTransactions } = get();
+
+
+            const lastId = allTransactions.length
+                ? Math.max(...allTransactions.map(t => Number(t.id)))
+                : 0;
+
+            const nextId = String(lastId + 1);
+
+
+            const status =
+                STATUSES[Math.floor(Math.random() * STATUSES.length)] as
+                (typeof STATUS_VALUES)[number];
+
+            const newTx: Transaction = {
+                id: nextId,
+                merchant,
+                amount,
+                category,
+                status,
+                date: new Date().toISOString().split("T")[0],
+            };
+
+            set({
+                allTransactions: [newTx, ...allTransactions],
+            });
+
+            return true;
+        } catch (e) {
+            console.log("Add transaction failed", e);
+            return false;
+        }
+    }
+
 }));

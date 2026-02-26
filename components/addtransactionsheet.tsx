@@ -1,7 +1,10 @@
-import { images } from '@/constants/images';
+import { useTransactionStore } from '@/store';
+import { CATEGORY_VALUES } from '@/types/type';
 import { transactionSchema } from '@/utils/transactionschema';
+import { MaterialIcons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
-import { Dimensions, Image, Keyboard, KeyboardAvoidingView, Platform, ScrollView, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
+import { Alert, Dimensions, Keyboard, KeyboardAvoidingView, Platform, ScrollView, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import { Gesture, GestureDetector, TextInput } from "react-native-gesture-handler";
 import Animated, {
     useAnimatedStyle,
@@ -35,6 +38,7 @@ const springConfig = {
 };
 
 const AddTransactionSheet = ({ onClose, isOpen, onDrag }: BottomSheetProps) => {
+    const router = useRouter();
     const translateY = useSharedValue<number>(SNAP_BOTTOM);
     const context = useSharedValue({ y: 0 });
     const sheetProgress = useSharedValue(0);
@@ -42,8 +46,9 @@ const AddTransactionSheet = ({ onClose, isOpen, onDrag }: BottomSheetProps) => {
     const merchantRef = useRef<TextInput>(null);
     const amountRef = useRef<TextInput>(null);
     const categoriesRef = useRef<TextInput>(null);
+    const addTransaction = useTransactionStore((state) => state.addTransaction);
     const quickAmounts = [50, 100, 200, 500, 700, 1000] as const
-    const catergorySelect = ["Groceries", "Dining", "Shopping", "Utilities", "Transport", "Education"] as const;
+    const catergorySelect = ["Groceries", "Dining", "Shopping", "Utilities", "Transport", "Entertainment"] as const;
     const [activeAmountShown, setActiveAmountShown] = useState<quickAmountsType | null>(null)
     const [transaction, setTransaction] = useState({
         merchant: "",
@@ -82,6 +87,63 @@ const AddTransactionSheet = ({ onClose, isOpen, onDrag }: BottomSheetProps) => {
             }
         }
     };
+    //Add transaction method
+    const handleAddTransaction = () => {
+        if (!transaction.merchant || !transaction.amount || !transaction.categories) return;
+
+        const success = addTransaction({
+            merchant: transaction.merchant.trim(),
+            amount: Number(transaction.amount),
+            category: transaction.categories as (typeof CATEGORY_VALUES)[number],
+        });
+
+        if (success) {
+            Alert.alert("Success", "Transaction added successfully", [
+                {
+                    text: "OK",
+                    onPress: () => {
+                        setTransaction({
+                            merchant: "",
+                            amount: "",
+                            categories: ""
+                        });
+                        setActiveAmountShown(null);
+                        setActiveCategory(null);
+                        setErrors({});
+                        if (onClose) onClose();
+
+                        router.push("/");
+                    },
+                },
+            ],
+                { cancelable: false }
+
+            );
+        } else {
+            Alert.alert("Error", "Failed to add the Transaction.", [
+                {
+                    text: "Try Again",
+                    style: "default",
+                    onPress: () => {
+                        validateField("merchant", transaction.merchant);
+                        validateField("amount", transaction.amount);
+                        validateField("categories", transaction.categories);
+                    }
+                },
+                {
+                    text: "Cancel",
+                    style: "destructive",
+                    onPress: () => {
+                        setErrors({});
+                        if (onClose) onClose();
+                        router.push("/"); // Navigate back to home or transactions list
+                    }
+                }
+            ],
+                { cancelable: false }
+            );
+        }
+    }
 
     useEffect(() => {
         translateY.value = withSpring(isOpen ? SNAP_TOP : SNAP_BOTTOM, springConfig);
@@ -161,21 +223,18 @@ const AddTransactionSheet = ({ onClose, isOpen, onDrag }: BottomSheetProps) => {
                     },
                 ]}
             >
-                <ScrollView
-                    bounces={false}
-                    showsVerticalScrollIndicator={false}
+                <View
+
                     className='h-full flex-1 px-6 py-2'
                 >
                     <KeyboardAvoidingView behavior={Platform.OS === "ios" ? 'padding' : 'height'} keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0} className="flex-1">
                         <TouchableWithoutFeedback onPress={Keyboard.dismiss} >
                             <View className="flex-1  mt-4">
-                                <View className=' border-b border-zinc-400 shadow-xs  rounded-lg  flex-row items-center justify-between place-items-center'>
+                                <View className='py-3  border-b border-gray-300  rounded-lg  flex-row items-center justify-between place-items-center'>
 
-                                    <Image
-                                        source={images.SoftnetImage}
-                                        resizeMode='contain'
-                                        className='w-24 h-14'
-                                    />
+                                    <TouchableOpacity activeOpacity={0.6} className='px-1'>
+                                        <MaterialIcons name="home-filled" size={26} color="#000" />
+                                    </TouchableOpacity>
 
                                     <Text className='text-center text-md  font-inter-bold text-black-300 capitalize '> Add a transaction </Text>
                                     <TouchableOpacity
@@ -186,7 +245,13 @@ const AddTransactionSheet = ({ onClose, isOpen, onDrag }: BottomSheetProps) => {
                                         <Text className='text-green-500 font-inter-semibold text-sm'> Records </Text>
                                     </TouchableOpacity>
                                 </View>
-                                <View className='py-6 flex-col gap-y-4'>
+                                <ScrollView
+                                    className='py-6 flex-col gap-y-4'
+                                    contentContainerStyle={{ paddingBottom: insets.bottom + 5 }}
+                                    bounces={false}
+                                    showsVerticalScrollIndicator={false}
+                                    bouncesZoom={false}
+                                >
 
                                     <View className='mt-4 bg-white rounded-2xl shadow-xs  py-4 px-3 border border-transparent overflow-hidden' >
                                         <Text className='text-[14px] font-inter-regular'> merchant </Text>
@@ -341,17 +406,17 @@ const AddTransactionSheet = ({ onClose, isOpen, onDrag }: BottomSheetProps) => {
                                     </View>
                                     <TouchableOpacity
                                         activeOpacity={0.7}
-                                        onPress={() => { }}
+                                        onPress={handleAddTransaction}
                                         disabled={isDisabled}
-                                        className={` px-6 py-5 ${isDisabled ? "bg-gray-300" : "bg-green-600"} w-full transition-colors duration-300 rounded-2xl flex-row items-center justify-center `}
+                                        className={` mt-4 px-6 py-5 ${isDisabled ? "bg-gray-300" : "bg-green-600"} w-full transition-colors duration-300 rounded-2xl flex-row items-center justify-center `}
                                     >
                                         <Text className={` text-[15px] ${isDisabled ? "text-gray-500" : "text-white"} `}>  Add Transaction </Text>
                                     </TouchableOpacity>
-                                </View>
+                                </ScrollView>
                             </View>
                         </TouchableWithoutFeedback>
                     </KeyboardAvoidingView>
-                </ScrollView>
+                </View>
             </Animated.View>
         </GestureDetector>
     );

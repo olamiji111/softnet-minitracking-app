@@ -1,12 +1,13 @@
+import { images } from "@/constants/images";
 import { useTransactionStore } from "@/store";
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { LayoutChangeEvent, Pressable, Text, TouchableOpacity, View } from "react-native";
+import { Image, LayoutChangeEvent, Pressable, Text, TouchableOpacity, View } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 
-const PANEL_HEIGHT = 180;
+const PANEL_HEIGHT = 200;
 
 
 const Header = () => {
@@ -44,10 +45,10 @@ const Header = () => {
     const toggleFilter = (type: "category" | "status") => {
         const opening = openFilter !== type;
         setOpenFilter(opening ? type : null);
-        panelHeight.value = withTiming(opening ? PANEL_HEIGHT : 0, { duration: 90 });
+        panelHeight.value = withTiming(opening ? PANEL_HEIGHT : 0, { duration: 100 });
     };
 
-    /* ---------------- Measure header container ---------------- */
+
     const onHeaderLayout = (e: LayoutChangeEvent) => {
         headerBottom.value = e.nativeEvent.layout.height + insets.top;
     };
@@ -55,11 +56,13 @@ const Header = () => {
     /* ---------------- HeaderTop ---------------- */
     const HeaderTop = () => (
         <View className="flex-row justify-between items-center" style={{ height: 40 }}>
-            <TouchableOpacity>
-                <MaterialIcons name="home-filled" size={26} color="#000" />
-            </TouchableOpacity>
+            <Image
+                source={images.SoftnetImage}
+                resizeMode='contain'
+                className='w-24 h-14'
+            />
 
-            <Text className="text-black text-[15px] font-inter-bold pl-4">
+            <Text className="text-black text-[15px] font-inter-bold pr-6">
                 Transactions
             </Text>
 
@@ -122,7 +125,7 @@ const Header = () => {
 
         const options =
             openFilter === "category"
-                ? ["All Categories", "Groceries", "Dining", "Shopping", "Utilities", "Transport"]
+                ? ["All Categories", "Groceries", "Dining", "Shopping", "Utilities", "Transportation", "Entertainment", "Healthcare"]
                 : ["All Status", "Completed", "Pending", "Failed", "Reversed", "To be Paid"];
 
         const setActiveOption = (opt: string) => {
@@ -151,9 +154,9 @@ const Header = () => {
                 {/* Panel */}
                 <Animated.View
                     style={panelStyle}
-                    className="absolute left-0 right-0 bg-white overflow-hidden z-50 rounded-b-3xl"
+                    className="absolute h-full left-0 right-0 bg-white overflow-hidden z-50 rounded-b-3xl "
                 >
-                    <View className="flex-row flex-wrap justify-center gap-2 mt-4 py-4 px-6">
+                    <View className=" flex-row  flex-wrap justify-center gap-2 mt-4 py-4 px-6">
                         <View className="h-px mb-4 bg-gray-200 w-full" />
                         {options.map((opt) => {
                             const isActive =
@@ -165,7 +168,7 @@ const Header = () => {
                                     key={opt}
                                     activeOpacity={0.8}
                                     onPress={() => setActiveOption(opt)}
-                                    className={`px-3 py-2.5 rounded-md ${isActive ? "bg-green-100" : "bg-gray-200"}`}
+                                    className={`px-3 py-2.5 rounded-md  ${isActive ? "bg-green-100" : "bg-gray-200"}`}
                                 >
                                     <Text className={`text-sm font-inter-light ${isActive ? "text-green-500" : "text-black"}`}>{opt}</Text>
                                 </TouchableOpacity>
