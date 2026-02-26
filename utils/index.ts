@@ -1,5 +1,4 @@
 // utils/groupTransactions.ts
-import { Transaction } from "@/types/type";
 
 
 
@@ -24,21 +23,6 @@ export const generateTransactionNumber = (id: string | number) => {
 
     return digits.join("");
 };
-
-
-interface GroupedItem {
-    title: string;
-    data: Transaction[];
-}
-
-type AccType = {
-    [year: number]: {
-        [month: string]: {
-            [day: number]: Transaction[];
-        };
-    };
-};
-
 
 
 export const formatDate = (dateStr: string) => {
